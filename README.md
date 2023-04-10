@@ -38,7 +38,7 @@ fs: A built-in Node.js module for file system operations.
 
 markdown-pdf: A Node.js module for generating PDF files from Markdown.
 
-#Note
+# Note
 Please use this script responsibly and in compliance with the terms of use of Indeed.co.uk.
 
 This script may break if Indeed.co.uk's website structure changes. If that happens, you may need to update the script accordingly.
