@@ -56,53 +56,56 @@ async function scrapeJobListings(jobRole, location, daysAgo, filter) {
       const listings = Array.from(
         document.querySelectorAll(".slider_container")
       );
-      // Filter listings based on title containing vaiable
-      return listings
-        .filter((listing) =>
-          listing
-            .querySelector(".jobTitle")
-            .textContent.trim()
-            .toLowerCase()
-            //Change the word to the one you want to filter
-            .includes(filter)
-        )
-        .map((listing) => {
-          const titleElement = listing.querySelector(".jobTitle");
-          const title = titleElement ? titleElement.textContent.trim() : "";
-          const companyElement = listing.querySelector(".companyName");
-          const company = companyElement
-            ? companyElement.textContent.trim()
-            : "";
-          const locationElement = listing.querySelector(".companyLocation");
-          const location = locationElement
-            ? locationElement.textContent.trim()
-            : "";
-          const summaryElement = listing.querySelector(".job-snippet");
-          const summary = summaryElement
-            ? summaryElement.textContent.trim()
-            : "";
-          const linkElement = listing.querySelector(".jcs-JobTitle");
-          const link = linkElement ? linkElement.href : "";
+      // Filter listings based on title containing variable
+      return (
+        listings
+          .filter((listing) =>
+            listing
+              .querySelector(".jobTitle")
+              .textContent.trim()
+              .toLowerCase()
+              //Change the word to the one you want to filter
+              .includes(filter)
+          )
+          // Map the filtered listings to an object containing the data we want
+          .map((listing) => {
+            const titleElement = listing.querySelector(".jobTitle");
+            const title = titleElement ? titleElement.textContent.trim() : "";
+            const companyElement = listing.querySelector(".companyName");
+            const company = companyElement
+              ? companyElement.textContent.trim()
+              : "";
+            const locationElement = listing.querySelector(".companyLocation");
+            const location = locationElement
+              ? locationElement.textContent.trim()
+              : "";
+            const summaryElement = listing.querySelector(".job-snippet");
+            const summary = summaryElement
+              ? summaryElement.textContent.trim()
+              : "";
+            const linkElement = listing.querySelector(".jcs-JobTitle");
+            const link = linkElement ? linkElement.href : "";
 
-          return { title, company, location, summary, link };
-        });
+            return { title, company, location, summary, link };
+          })
+      );
     }, filter);
-
+    // Add the job listings data from the current page to the jobListings array
     jobListings.push(...pageJobListings); // Collect job listings data from current page
 
-    console.log(`Job listings:`, jobListings);
+    // console.log(`Job listings:`, jobListings);
 
+    // Close popups
     const popupSelectors = ".icl-CloseButton"; // Update with the appropriate selector for the close buttons of the popups
     const popupElements = await page.$$(popupSelectors); // Use page.$$ to retrieve all matching elements
-
     for (const popupElement of popupElements) {
       // Handle each popup as needed (e.g., close, dismiss, etc.)
       await popupElement.click(); // Click on the close button of each popup
       console.log("popup closed");
-      await new Promise((r) => setTimeout(r, 500)); // Update to use "await" to wait for the promise to resolve
+      await new Promise((r) => setTimeout(r, 500));
     }
 
-    // Check if there is a "Next" button or link
+    // Check if there is a "Next" button
     const nextButton = await page.$('[data-testid="pagination-page-next"]');
     if (nextButton) {
       await Promise.all([
@@ -120,9 +123,10 @@ async function scrapeJobListings(jobRole, location, daysAgo, filter) {
           `- Title: ${job.title}\n  Company: ${job.company}\n  Location: ${job.location}\n Summary: ${job.summary}\n  Link:[${job.title}](${job.link})\n\n`
       );
       fs.writeFileSync(filePath, jobListingsList.join("\n"));
-      // Write the job listings data to a text file
+      // Write the job listings data to a markdown file
       markdownpdf()
         .from(filePath)
+        //convert to pdf
         .to(pdfFilePath, () => {
           console.log(`PDF file has been created at ${pdfFilePath}`);
         });
@@ -132,9 +136,9 @@ async function scrapeJobListings(jobRole, location, daysAgo, filter) {
       console.log("Job listings data saved to job_listings.json");
     }
   }
-
+  // Close the browser
   await browser.close();
   console.log("Browser closed.");
 }
-
+// Call the function
 scrapeJobListings(jobRole, location, daysAgo, filter);
