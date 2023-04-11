@@ -1,6 +1,6 @@
 // Description: This script scrapes job listings from Indeed.co.uk and saves them to a text file, a PDF file, and a JSON file.
 
-// Update the following variables to change the search criteria(ensure to include the + character between words)
+//! Update the following variables to change the search criteria(insure to include the + character between words)
 const jobRole = "junior+software+developer";
 const location = "United+Kingdom";
 const daysAgo = 5;
@@ -17,6 +17,7 @@ const userAgentList = [
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:71.0) Gecko/20100101 Firefox/71.0",
 ];
 
+// Function to scrape job listings
 async function scrapeJobListings(jobRole, location, daysAgo, filter) {
   console.log("Launching browser...");
   // Launch a headless browser, change headless to false to see the browser in action
@@ -115,9 +116,19 @@ async function scrapeJobListings(jobRole, location, daysAgo, filter) {
       ]);
     } else {
       hasMorePages = false; // Set hasMorePages to false if there is no "Next" button or link
-      // Define the file path on the desktop
-      const filePath = "/Users/Seb/Desktop/job_listings.md";
-      const pdfFilePath = "/Users/Seb/Desktop/job_listings.pdf";
+      // Define the file path to save the job listings data to
+      const path = require("path");
+      // Define the file paths
+      const filePath = path.join(
+        process.env.HOME,
+        "Desktop",
+        "job_listings.md"
+      );
+      const pdfFilePath = path.join(
+        process.env.HOME,
+        "Desktop",
+        "job_listings.pdf"
+      );
       const jobListingsList = jobListings.map(
         (job) =>
           `- Title: ${job.title}\n  Company: ${job.company}\n  Location: ${job.location}\n Summary: ${job.summary}\n  Link:[${job.title}](${job.link})\n\n`
