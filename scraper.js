@@ -1,6 +1,6 @@
-// Description: This script scrapes job listings from Indeed.co.uk and saves them to a text file, a PDF file, and a JSON file.
+// Description: This script scrapes job listings from Indeed.co.uk and saves them to a PDF file and a JSON file.
 
-//! Update the following variables to change the search criteria(insure to include the + character between words)
+//! Update the following variables to change the search criteria (ensure to include the + character between words)
 const jobRole = "junior+software+developer";
 const location = "United+Kingdom";
 const daysAgo = 5;
@@ -11,7 +11,7 @@ const puppeteer = require("puppeteer");
 const fs = require("fs");
 const markdownpdf = require("markdown-pdf");
 
-// Define a list of user agents
+// Define a list of user agents (to avoid CAPTCHA)
 const userAgentList = [
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:70.0) Gecko/20100101 Firefox/70.0",
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:71.0) Gecko/20100101 Firefox/71.0",
@@ -49,6 +49,7 @@ async function scrapeJobListings(jobRole, location, daysAgo, filter) {
 
   let hasMorePages = true; // Track if there are more pages
   const jobListings = []; // Store job listings data
+  
   // Loop through pages
   while (hasMorePages) {
     console.log(`Scraping page...`);
@@ -65,7 +66,6 @@ async function scrapeJobListings(jobRole, location, daysAgo, filter) {
               .querySelector(".jobTitle")
               .textContent.trim()
               .toLowerCase()
-              //Change the word to the one you want to filter
               .includes(filter)
           )
           // Map the filtered listings to an object containing the data we want
