@@ -1,5 +1,5 @@
 # Indeed Job Scraper
-This is a Node.js script that scrapes job listings from Indeed.co.uk based on search criteria such as job role, location, and filter keywords. The scraped job listings are saved to a text file, a PDF file, and a JSON file for further analysis.
+This is a Node.js script that scrapes job listings from Indeed.co.uk based on search criteria such as job role, location, and filter keywords. The scraped job listings are saved to a text file and a JSON file for further analysis.
 
 ### Installation
 ```
